@@ -1,4 +1,4 @@
-# Conctact Tracer
+# Contact Tracer
 ## Wireframes
 
 ![Wireframes](images/contact-tracer-wireframes.jpeg "Wireframs")

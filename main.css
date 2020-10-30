@@ -17,20 +17,25 @@ body {
     display: flex;
     flex-direction: column;
     border: 2px solid magenta;
+    justify-content: center;
 }
-.stats {
-    height: 100vmin;
+#stats {
     display: flex;
     flex-direction: row;
-    justify-content: center;
-    border: 1px solid green;
+    justify-content: space-around;
+    border: 3px solid green;
 }
 .scoreboard {
     float: left;
-    border: 1px solid blue;
+    border: 1px solid red;
+    color: red;
+    background-color: black;
+    min-width: 100px;
+    display: flex;
+    justify-content: center;
 }
 button {
-    float: left;
+    min-width: 75px;
 }
 
 #board {

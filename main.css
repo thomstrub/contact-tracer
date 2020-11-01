@@ -48,12 +48,21 @@ button {
 
 #board div {
     /* border-radius: 50%; */
-    border: 1px solid grey;
+    border: 3px solid gray;
 }
 
 .square {
     font-size: 6vh;
     text-align: center;
     color: black;
-    background-color: white;
+    background-color: gray;
+    
+
+}
+
+.shadow {
+    border: 1px soid darkgray;
+    -moz-box-shadow:    1px 5px 5px 3px #ccc;
+    -webkit-box-shadow: 1px 5px 5px 3px #ccc;
+    box-shadow:         1px 3px 3px 5px black;
 }

@@ -76,7 +76,8 @@ let gameBoard = document.getElementById('board')
 
 /*----- event listeners -----*/
 
-//
+// new game button - 'click'
+// each tile 'click release'
 
 
 
@@ -88,6 +89,9 @@ function initialize(){
 
 }
 
+// initialize board where each tile is an instance of the class tile
+// id will be the i and j values separated by x and y to denote axis and to
+// keep from confusing coordinates with integers
 function initializeBoard(){
     let board = [];
     let row = [];
@@ -96,8 +100,10 @@ function initializeBoard(){
     for(let i = 0; i < rows; i++){
         for(let j = 0; j < columns; j++){
             counter++
-            console.log('id: ', 'r', i, 'c', j, ' counter: ', counter);
+            console.log('id: ', 'y', i, 'x', j, ' counter: ', counter);
+            // make a new tile
             // logic for determining the id
+
             // logic for determining the ids of adjoining tiles
             // isRevealed = false
             // result for function for determining which square is a virus
@@ -115,13 +121,16 @@ function virusInit(counter, virus){
 }
 
 // render board 
+
+// adjust the css so that the colums in the CSS will always be the number of columns
+// on the game board
 board.forEach((e, i) => {
     e.forEach((f, j) => {
         let square = document.createElement('div')
         square.setAttribute('id', `r${i}c${j}`)
-        square.setAttribute('class', 'square')
-        square.style.backgroundColor = 'grey';
-        square.style.border = '1px solid magenta';
+        square.setAttribute('class', 'square, shadow')
+        square.style.backgroundColor = 'lightgray';
+        // square.style.border = '1px solid dark-gray';
         square.textContent = f ? f.icon : ''
         gameBoard.appendChild(square)
     })

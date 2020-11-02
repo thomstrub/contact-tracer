@@ -43,13 +43,13 @@ class Tile {
     // if it has no adjacent virus, each adjacent virus is revealed and so on.
     revealAndSpread() {
         this.toggleRevealed();
-        if(this.countAdjacentlVirus() > 0){
-            return;
-        } else {
-            this.adjoiningTiles.forEach(function(adjoined){
-                adjoined.spread();
-            });
-        }
+        // if(this.countAdjacentlVirus() > 0){
+        //     return;
+        // } else {
+        //     this.adjoiningTiles.forEach(function(adjoined){
+        //         adjoined.revealAndSpread();
+        //     });
+        // }
     }
 }
 
@@ -118,15 +118,20 @@ function render(elem){
 function renderBoard(){
     // adjust the css so that the colums in the CSS will always be the number of columns
 // on the game board
-    board.forEach((e, i) => {
-    e.forEach((f, j) => {
+    board.forEach((row, i) => {
+    row.forEach((tile, j) => {
         let square = document.createElement('div')
         square.setAttribute('id', `${generateId(i, j)}`)
         square.setAttribute('class', 'square, shadow')
         square.style.backgroundColor = 'lightgray';
         square.textContent = `${generateId(i, j)}`;
+        if(tile.isVirus === true && tile.isReveald === true){
+            square.innerText = `${generateId(i, j)} V`;
+        } else if(tile.isReveald === true){
+            square.innerText = `${generateId(i, j)} r`;
+        }
         // square.style.border = '1px solid dark-gray';
-        // square.textContent = f ? f.icon : ''
+        // square.textContent = tile ? f.icon : ''
         gameBoard.appendChild(square)
     });
 });
@@ -178,7 +183,14 @@ function virusInit(){
 
 function tileClick(e){
     console.log(e.target.id);
-
+    board.forEach(function(row, idx){
+        row.forEach(function(tile, jdx){
+            if(tile.id === e.target.id){
+                tile.revealAndSpread();
+            }
+        });
+    });
+    render();
 }
 
 

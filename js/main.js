@@ -56,21 +56,22 @@ class Tile {
 
 
 /*----- app's state (variables) -----*/
-let board = [
-    [null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null]
-    ];
+// let board = [
+//     [null,null,null,null,null,null,null,null,null],
+//     [null,null,null,null,null,null,null,null,null],
+//     [null,null,null,null,null,null,null,null,null],
+//     [null,null,null,null,null,null,null,null,null],
+//     [null,null,null,null,null,null,null,null,null],
+//     [null,null,null,null,null,null,null,null,null],
+//     [null,null,null,null,null,null,null,null,null],
+//     [null,null,null,null,null,null,null,null,null],
+//     [null,null,null,null,null,null,null,null,null]
+//     ];
 
     let timer;
     let virusCount;
     let setting;
+    let board = [];
 /*----- cached element references -----*/
 let gameBoard = document.getElementById('board')
 
@@ -79,36 +80,60 @@ let gameBoard = document.getElementById('board')
 // new game button - 'click'
 // each tile 'click release'
 
-
+initialize();
 
 /*----- functions -----*/
 function initialize(){
     timer = 0;
     setting = difficulty.easy;
     virusCount = Math.floor(rows * columns * setting);
+    board = initializeBoard();
+    
 
+    render(board);
 }
 
 // initialize board where each tile is an instance of the class tile
 // id will be the i and j values separated by x and y to denote axis and to
 // keep from confusing coordinates with integers
 function initializeBoard(){
-    let board = [];
+    console.log('init is firing');
     const virusLocations = virusInit();
     for(let i = 0; i < rows; i++){
+        // initialize an array for every row of tiles
+        // each row is an array at board[i]
+        board[i] = [];
         for(let j = 0; j < columns; j++){
-            // make a new tile
+            // make a new tile as an instance of the class Tile 
             let newTile = new Tile(generateId(i, j), defineAdjacentTiles(i, j), defineVirus(i, j, virusLocations));
-            // logic for determining the id
-            // logic for determining the ids of adjoining tiles
-            // isRevealed = false
-            // result for function for determining which square is a virus
-               
-
+            // push each new tile into it's row's array
+            board[i].push(newTile);
+            console.log(newTile);   
         }
     }
+    return board;
 }
-initializeBoard();
+
+function render(elem){
+    console.log('render is rendering');
+    renderBoard(elem);
+}
+
+function renderBoard(board){
+    // adjust the css so that the colums in the CSS will always be the number of columns
+// on the game board
+    board.forEach((e, i) => {
+    e.forEach((f, j) => {
+        let square = document.createElement('div')
+        square.setAttribute('id', `${generateId(i, j)}`)
+        square.setAttribute('class', 'square, shadow')
+        square.style.backgroundColor = 'lightgray';
+        // square.style.border = '1px solid dark-gray';
+        square.textContent = f ? f.icon : ''
+        gameBoard.appendChild(square)
+    });
+});
+}
 
     // id should be have x and y coordinates to coorespond with DOM id for rendering
 function generateId(x, y){
@@ -138,7 +163,7 @@ function defineVirus(x, y, arr){
 
 // create an array of ten unique x and y coordinates within range for the given 
 // rows and columns
-function virusInit(x, y){
+function virusInit(){
     let virusArr = [];
     while(virusArr.length < 10){
         let virusAxisX = Math.floor(Math.random() * rows);
@@ -155,17 +180,17 @@ function virusInit(x, y){
 
 // adjust the css so that the colums in the CSS will always be the number of columns
 // on the game board
-board.forEach((e, i) => {
-    e.forEach((f, j) => {
-        let square = document.createElement('div')
-        square.setAttribute('id', `r${i}c${j}`)
-        square.setAttribute('class', 'square, shadow')
-        square.style.backgroundColor = 'lightgray';
-        // square.style.border = '1px solid dark-gray';
-        square.textContent = f ? f.icon : ''
-        gameBoard.appendChild(square)
-    })
-})
+// board.forEach((e, i) => {
+//     e.forEach((f, j) => {
+//         let square = document.createElement('div')
+//         square.setAttribute('id', `r${i}c${j}`)
+//         square.setAttribute('class', 'square, shadow')
+//         square.style.backgroundColor = 'lightgray';
+//         // square.style.border = '1px solid dark-gray';
+//         square.textContent = f ? f.icon : ''
+//         gameBoard.appendChild(square)
+//     })
+// })
 
 
 

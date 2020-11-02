@@ -16,12 +16,12 @@ const difficulty = {
 // adjacent tiles. This should continue recursively.
 
 class Tile {
-    constructor(id, adjoiningTiles, isReveald, isVirus, isQuarentined) {
+    constructor(id, adjoiningTiles, isVirus) {
         this.id = id;
         this.adjoiningTiles = adjoiningTiles;
-        this.isReveald = isReveald;
+        this.isReveald = false;
         this.isVirus = isVirus;
-        this.isQuarentined = isQuarentined;
+        this.isQuarentined = false;
     }
     toggleRevealed() {
         this.isReveald = true;
@@ -98,7 +98,7 @@ function initializeBoard(){
     for(let i = 0; i < rows; i++){
         for(let j = 0; j < columns; j++){
             // make a new tile
-            let newTile = new Tile(generateId(i, j), )
+            let newTile = new Tile(generateId(i, j), defineAdjacentTiles(i, j), defineVirus(i, j, virusLocations));
             // logic for determining the id
             // logic for determining the ids of adjoining tiles
             // isRevealed = false

@@ -56,29 +56,25 @@ class Tile {
 
 
 /*----- app's state (variables) -----*/
-// let board = [
-//     [null,null,null,null,null,null,null,null,null],
-//     [null,null,null,null,null,null,null,null,null],
-//     [null,null,null,null,null,null,null,null,null],
-//     [null,null,null,null,null,null,null,null,null],
-//     [null,null,null,null,null,null,null,null,null],
-//     [null,null,null,null,null,null,null,null,null],
-//     [null,null,null,null,null,null,null,null,null],
-//     [null,null,null,null,null,null,null,null,null],
-//     [null,null,null,null,null,null,null,null,null]
-//     ];
-
     let timer;
     let virusCount;
     let setting;
     let board = [];
+
+
 /*----- cached element references -----*/
 let gameBoard = document.getElementById('board')
+let virusRemaining = document.getElementById('virus-remaining');
+let timerElem = document.getElementById('timer');
+let newGameButton = document.getElementById('new-game');
 
 /*----- event listeners -----*/
 
 // new game button - 'click'
 // each tile 'click release'
+
+newGameButton.addEventListener('click', initialize);
+gameBoard.addEventListener('mouseup', tileClick)
 
 initialize();
 
@@ -90,7 +86,7 @@ function initialize(){
     board = initializeBoard();
     
 
-    render(board);
+    render();
 }
 
 // initialize board where each tile is an instance of the class tile
@@ -108,7 +104,7 @@ function initializeBoard(){
             let newTile = new Tile(generateId(i, j), defineAdjacentTiles(i, j), defineVirus(i, j, virusLocations));
             // push each new tile into it's row's array
             board[i].push(newTile);
-            console.log(newTile);   
+            // console.log(newTile);   
         }
     }
     return board;
@@ -119,7 +115,7 @@ function render(elem){
     renderBoard(elem);
 }
 
-function renderBoard(board){
+function renderBoard(){
     // adjust the css so that the colums in the CSS will always be the number of columns
 // on the game board
     board.forEach((e, i) => {
@@ -128,8 +124,9 @@ function renderBoard(board){
         square.setAttribute('id', `${generateId(i, j)}`)
         square.setAttribute('class', 'square, shadow')
         square.style.backgroundColor = 'lightgray';
+        square.textContent = `${generateId(i, j)}`;
         // square.style.border = '1px solid dark-gray';
-        square.textContent = f ? f.icon : ''
+        // square.textContent = f ? f.icon : ''
         gameBoard.appendChild(square)
     });
 });
@@ -176,6 +173,16 @@ function virusInit(){
     return virusArr;   
 }
 
+
+// /*-------------------event listener functions----------------------*/ 
+
+function tileClick(e){
+    console.log(e.target.id);
+
+}
+
+
+/// code recycle bin
 // render board 
 
 // adjust the css so that the colums in the CSS will always be the number of columns

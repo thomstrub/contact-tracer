@@ -94,30 +94,61 @@ function initialize(){
 // keep from confusing coordinates with integers
 function initializeBoard(){
     let board = [];
-    let row = [];
-    let counter = 0; // don't really need the counter- the id of the tiles is a counter- maybe use modulus w/ 9?
-    let virusLocations = [];
+    const virusLocations = virusInit();
     for(let i = 0; i < rows; i++){
         for(let j = 0; j < columns; j++){
-            counter++
-            console.log('id: ', 'y', i, 'x', j, ' counter: ', counter);
             // make a new tile
+            let newTile = new Tile(generateId(i, j), )
             // logic for determining the id
-
             // logic for determining the ids of adjoining tiles
             // isRevealed = false
             // result for function for determining which square is a virus
-                // use Math.flooor(Math.random) to pick ten numbers between 1 and 81, then use
-                // a counter to determine if that tile is a virus or not
+               
+
         }
     }
 }
 initializeBoard();
 
+    // id should be have x and y coordinates to coorespond with DOM id for rendering
+function generateId(x, y){
+    return `x${x}y${y}`;
+}
 
-function virusInit(counter, virus){
-    // for each virus, / use Math.flooor(Math.random) to pick ten numbers between 1 and 81, then use
-                // a counter to determine if that tile is a virus or not
+function defineAdjacentTiles(x, y){
+    let adjacentArr = [];
+    // both x and y values must be either one less, equal to, or one more
+    for(let i = -1; i < 2; i++){
+        if(x + i >= 0 && x + i < rows){
+            for(let j = -1; j < 2; j++){
+                if(y + j >= 0 && y + j < columns){
+                    if(i !== 0 || j !== 0){
+                    adjacentArr.push(generateId(x + i, y + j));
+                    }
+                }
+            }
+        }
+    }
+    return adjacentArr;
+}
+
+function defineVirus(x, y, arr){
+    return (arr.includes(generateId(x, y)) ? true : false);
+}
+
+// create an array of ten unique x and y coordinates within range for the given 
+// rows and columns
+function virusInit(x, y){
+    let virusArr = [];
+    while(virusArr.length < 10){
+        let virusAxisX = Math.floor(Math.random() * rows);
+        let virusAxisY = Math.floor(Math.random() * columns);
+        let virusXY = `x${virusAxisX}y${virusAxisY}`
+        if(virusArr.includes(virusXY) === false){
+            virusArr.push(virusXY);
+        }
+    }
+    return virusArr;   
 }
 
 // render board 

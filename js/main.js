@@ -22,12 +22,21 @@ class Tile {
         this.adjoiningTiles = [];
         this.isReveald;
         this.isVirus;
-        this.isQuarentined;
+        this.isQuarantined;
     }
     toggleRevealed() {
         this.isReveald = true;
     }
-    
+    toggleQuarantined() {
+        switch(this.isQuarantined) {
+            case true :
+                return this.isQuarantined = false;
+                break;
+            case false :
+                return this.isQuarantined = true;
+                break;
+        }
+    }
 
     // tally the number of adjacent squares in which 'isVirus = true'
 
@@ -52,6 +61,7 @@ class Tile {
 /*----- app's state (variables) -----*/
 let timer;
 let virusCount;
+let virusCountRender;
 let setting;
 let board = [];
 let virusLocations;
@@ -78,6 +88,7 @@ function initialize(){
     timer = 0;
     setting = difficulty.easy;
     virusCount = Math.round(rows * columns * setting);
+    virusCountRender = virusCount;
     board.length > 0 ? console.log(board.length) : createBoard();
     initializeBoard();
     
@@ -121,7 +132,7 @@ function initializeBoard(){
             board[i][j].isVirus = defineVirus(i, j, virusLocations);
             board[i][j].adjoiningVirus = countAdjacentlVirus(board[i][j].adjoiningTiles, virusLocations);
             board[i][j].isReveald = false;
-            board[i][j].isQuarentined = false;
+            board[i][j].isQuarantined = false;
             console.log(`initialized: ${board[i][j].isVirus}`);
         }
     }
@@ -198,12 +209,16 @@ function render(){
                 } else {
                     tileElements[idx][jdx].textContent = tile.adjoiningVirus
                 }
+            } else if(tile.isQuarantined === true){
+                tileElements[idx][jdx].textContent = 'Q';
+                tileElements[idx][jdx].setAttribute('class', 'square, shadow, quarantined');
             } else {
                 tileElements[idx][jdx].setAttribute('class', 'square, shadow');
                 tileElements[idx][jdx].textContent = `${generateId(idx, jdx)}`;
             }
         });
     });
+
 }
 
 // create tile elements and cache them in the tileElements variable

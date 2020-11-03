@@ -16,36 +16,23 @@ const difficulty = {
 // adjacent tiles. This should continue recursively.
 
 class Tile {
-    constructor(id, adjoiningTiles, isVirus) {
-        this.id = id;
-        this.adjoiningTiles = adjoiningTiles;
+    constructor() {
+        this.id;
+        this.adjoiningVirus = 0;
+        this.adjoiningTiles = [];
         this.isReveald = false;
-        this.isVirus = isVirus;
+        this.isVirus;
         this.isQuarentined = false;
     }
     toggleRevealed() {
         this.isReveald = true;
     }
+    toggleVirus() {
+        this.isVirus = true;
+    }
 
     // tally the number of adjacent squares in which 'isVirus = true'
-    countAdjacentlVirus() {
-        let count = 0;
-        board.forEach(function(row, idx){
-            row.forEach(function(tile, jdx){
-                if(this.adjoiningTiles.includes(tile)){
-                    if(tile.isVirus === true) {
-                        count++;
-                    }
-                }
-            });
-        });
-        // this.adjoiningTiles.forEach(function(adjoined){
-        //     if (adjoined.isVirus === true) {
-        //         count++;
-        //     }
-            return count;
-        
-    }
+
 
     // when a tile is revealed by the user, this.revealed = true
     // if it has no adjacent virus, each adjacent virus is revealed and so on.
@@ -65,11 +52,11 @@ class Tile {
 
 
 /*----- app's state (variables) -----*/
-    let timer;
-    let virusCount;
-    let setting;
-    let board = [];
-    let virusLocations;
+let timer;
+let virusCount;
+let setting;
+let board = [];
+let virusLocations;
 
 /*----- cached element references -----*/
 let gameBoard = document.getElementById('board')
@@ -92,25 +79,28 @@ function initialize(){
     timer = 0;
     setting = difficulty.easy;
     virusCount = Math.floor(rows * columns * setting);
-    board = initializeBoard();
+    board.length > 0 ? console.log(board.length) : createBoard();
+    initializeBoard();
     
     
     render(); // need to separate the initial board render from the update render
 }
 
+/*------------------------- INIT HELPER FUNCTIONS -------------------------------------------*/
+
 // initialize board where each tile is an instance of the class tile
 // id will be the i and j values separated by x and y to denote axis and to
 // keep from confusing coordinates with integers
-function initializeBoard(){
+function createBoard(){
     console.log('init is firing');
-    virusLocations = virusInit();
     for(let i = 0; i < rows; i++){
         // initialize an array for every row of tiles
         // each row is an array at board[i]
         board[i] = [];
         for(let j = 0; j < columns; j++){
             // make a new tile as an instance of the class Tile 
-            let newTile = new Tile(generateId(i, j), defineAdjacentTiles(i, j), defineVirus(i, j, virusLocations));
+            let newTile = new Tile();
+            // newTile.adjoiningTiles.push(defineAdjacentTiles(i, j));
             // push each new tile into it's row's array
             board[i].push(newTile);
             // console.log(newTile);   
@@ -118,6 +108,79 @@ function initializeBoard(){
     }
     return board;
 }
+
+function initializeBoard(){
+    virusLocations = virusInit();
+    for(let i = 0; i < rows; i++){
+        // initialize an array for every row of tiles
+        // each row is an array at board[i]
+        for(let j = 0; j < columns; j++){
+            // initialize attributes in each Tile instance
+            
+            board[i][j].id = generateId(i,j);
+            board[i][j].adjoiningTiles = defineAdjacentTiles(i, j);
+            board[i][j].isVirus = defineVirus(i, j, virusLocations);
+            board[i][j].adjoiningVirus = countAdjacentlVirus(board[i][j].adjoiningTiles, virusLocations);
+            console.log(`initialized: ${board[i][j].isVirus}`);
+        }
+    }
+}
+
+// id should be have x and y coordinates to coorespond with DOM id for rendering
+function generateId(x, y){
+    return `x${x}y${y}`;
+}
+
+function countAdjacentlVirus(adjacentArr, virusLocationArr) {
+    let count = 0;
+    adjacentArr.forEach(tile => {
+        virusLocations.forEach(virusLocation => {
+            if(tile === virusLocation){
+                count++;
+            } 
+        })
+    })
+    return count;
+    
+}
+// i want to define the adjacent tiles by refrence, so I have to use
+// an id
+function defineAdjacentTiles(x, y){
+    let adjacentArr = [];
+    // both x and y values must be either one less, equal to, or one more
+    for(let i = -1; i < 2; i++){
+        if(x + i >= 0 && x + i < rows){
+            for(let j = -1; j < 2; j++){
+                if(y + j >= 0 && y + j < columns){
+                    if(i !== 0 || j !== 0){
+                    adjacentArr.push(generateId((x + i),(y + i)));
+                    }
+                }
+            }
+        }
+    }
+    return adjacentArr;
+}
+
+function defineVirus(x, y, arr){
+    return (arr.includes(generateId(x, y)) ? true : false);
+}
+
+// create an array of ten unique x and y coordinates within range for the given 
+// rows and columns
+function virusInit(){
+    let virusArr = [];
+    while(virusArr.length < virusCount){
+        let virusAxisX = Math.floor(Math.random() * rows);
+        let virusAxisY = Math.floor(Math.random() * columns);
+        let virusXY = `x${virusAxisX}y${virusAxisY}`
+        if(virusArr.includes(virusXY) === false){
+            virusArr.push(virusXY);
+        }
+    }
+    return virusArr;   
+}
+/*------------------------------ render and render helper functions ----------------------------*/
 
 function render(){
     console.log('render is rendering');
@@ -163,46 +226,6 @@ function renderBoard(){
     }
 }
 
-    // id should be have x and y coordinates to coorespond with DOM id for rendering
-function generateId(x, y){
-    return `x${x}y${y}`;
-}
-
-function defineAdjacentTiles(x, y){
-    let adjacentArr = [];
-    // both x and y values must be either one less, equal to, or one more
-    for(let i = -1; i < 2; i++){
-        if(x + i >= 0 && x + i < rows){
-            for(let j = -1; j < 2; j++){
-                if(y + j >= 0 && y + j < columns){
-                    if(i !== 0 || j !== 0){
-                    adjacentArr.push(generateId(x + i, y + j));
-                    }
-                }
-            }
-        }
-    }
-    return adjacentArr;
-}
-
-function defineVirus(x, y, arr){
-    return (arr.includes(generateId(x, y)) ? true : false);
-}
-
-// create an array of ten unique x and y coordinates within range for the given 
-// rows and columns
-function virusInit(){
-    let virusArr = [];
-    while(virusArr.length < 10){
-        let virusAxisX = Math.floor(Math.random() * rows);
-        let virusAxisY = Math.floor(Math.random() * columns);
-        let virusXY = `x${virusAxisX}y${virusAxisY}`
-        if(virusArr.includes(virusXY) === false){
-            virusArr.push(virusXY);
-        }
-    }
-    return virusArr;   
-}
 
 
 // /*-------------------event listener functions----------------------*/ 
@@ -222,7 +245,7 @@ function tileClick(e){
 
 function recursiveReveal(clickedTile){
     console.log(clickedTile.adjoiningTiles);
-    console.log(clickedTile.countAdjacentlVirus());
+    console.log(clickedTile.adjoiningVirus);
     // if (clickedTile.countAdjacentlVirus > 0){
     //     clickedTile.toggleRevealed();
     // } else {

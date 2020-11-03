@@ -79,7 +79,7 @@ initialize();
 function initialize(){
     timer = 0;
     setting = difficulty.easy;
-    virusCount = Math.floor(rows * columns * setting);
+    virusCount = Math.floor((rows) * (columns) * (1 + setting));
     board.length > 0 ? console.log(board.length) : createBoard();
     initializeBoard();
     

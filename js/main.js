@@ -27,9 +27,7 @@ class Tile {
     toggleRevealed() {
         this.isReveald = true;
     }
-    toggleVirus() {
-        this.isVirus = true;
-    }
+    
 
     // tally the number of adjacent squares in which 'isVirus = true'
 
@@ -79,7 +77,7 @@ initialize();
 function initialize(){
     timer = 0;
     setting = difficulty.easy;
-    virusCount = Math.floor((rows) * (columns) * (1 + setting));
+    virusCount = Math.round(rows * columns * setting);
     board.length > 0 ? console.log(board.length) : createBoard();
     initializeBoard();
     

@@ -115,30 +115,48 @@ function initializeBoard(){
 
 function render(){
     console.log('render is rendering');
+
+    board.forEach((row, idx) => {
+        row.forEach((tile, jdx) => {
+            tileElements[idx][jdx].style.backgroundColor = 'lightgray';
+            if(tile.isReveald === true){
+                console.log(`${tile.id} is revealed`)
+                tileElements[idx][jdx].setAttribute('class', 'square, revealed');
+            } else {
+                tileElements[idx][jdx].setAttribute('class', 'square, shadow');
+            }
+        });
+    });
+    // tileElements.forEach(function(element) {
+    //     if(tile.isVirus === true && tile.isReveald === true){
+    //         square.innerText = `${generateId(i, j)} V`;
+    //     } else if(tile.isReveald === true){
+    //         square.innerText = `${generateId(i, j)} r`;
+    //     }
+    // });
 }
 
+// create tile elements and cache them in the tileElements variable
 function renderBoard(){
     // adjust the css so that the colums in the CSS will always be the number of columns
 // on the game board
+    if(tileElements.length > 0){
+        return;
+    } else{
     board.forEach((row, i) => {
         tileElements[i] = [];
         row.forEach((tile, j) => {
             let square = document.createElement('div')
             square.setAttribute('id', `${generateId(i, j)}`)
-            square.setAttribute('class', 'square, shadow')
-            square.style.backgroundColor = 'lightgray';
             square.textContent = `${generateId(i, j)}`;
-            if(tile.isVirus === true && tile.isReveald === true){
-                square.innerText = `${generateId(i, j)} V`;
-            } else if(tile.isReveald === true){
-                square.innerText = `${generateId(i, j)} r`;
-            }
+           
             // square.style.border = '1px solid dark-gray';
             // square.textContent = tile ? f.icon : ''
             gameBoard.appendChild(square)
             tileElements[i].push(document.getElementById(generateId(i, j)));
         });
-});
+    });
+    }
 }
 
     // id should be have x and y coordinates to coorespond with DOM id for rendering

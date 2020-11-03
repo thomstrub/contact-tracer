@@ -17,13 +17,14 @@ body {
     display: flex;
     flex-direction: column;
     border: 2px solid magenta;
-    justify-content: center;
+    padding: 1vh;
 }
 #stats {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     border: 3px solid green;
+    padding: 1vh;
 }
 .scoreboard {
     float: left;
@@ -62,7 +63,11 @@ button {
 
 .shadow {
     border: 1px soid darkgray;
-    -moz-box-shadow:    1px 5px 5px 3px #ccc;
-    -webkit-box-shadow: 1px 5px 5px 3px #ccc;
+    -moz-box-shadow:    1px 3px 3px 5px black;
+    -webkit-box-shadow: 1px 3px 3px 5px black;
     box-shadow:         1px 3px 3px 5px black;
+}
+
+.revealed {
+    border: 1px soid darkgray;
 }

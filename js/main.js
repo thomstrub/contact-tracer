@@ -63,7 +63,7 @@ class Tile {
     let virusCount;
     let setting;
     let board = [];
-
+    let virusLocations;
 
 /*----- cached element references -----*/
 let gameBoard = document.getElementById('board')
@@ -97,7 +97,7 @@ function initialize(){
 // keep from confusing coordinates with integers
 function initializeBoard(){
     console.log('init is firing');
-    const virusLocations = virusInit();
+    virusLocations = virusInit();
     for(let i = 0; i < rows; i++){
         // initialize an array for every row of tiles
         // each row is an array at board[i]
@@ -122,8 +122,13 @@ function render(){
             if(tile.isReveald === true){
                 console.log(`${tile.id} is revealed`)
                 tileElements[idx][jdx].setAttribute('class', 'square, revealed');
+                if(tile.isVirus === true){
+                    console.log(`${tile.id} is a virus`);
+                    tileElements[idx][jdx].textContent = 'V';
+                }
             } else {
                 tileElements[idx][jdx].setAttribute('class', 'square, shadow');
+                tileElements[idx][jdx].textContent = `${generateId(idx, jdx)}`;
             }
         });
     });
@@ -148,7 +153,7 @@ function renderBoard(){
         row.forEach((tile, j) => {
             let square = document.createElement('div')
             square.setAttribute('id', `${generateId(i, j)}`)
-            square.textContent = `${generateId(i, j)}`;
+            
            
             // square.style.border = '1px solid dark-gray';
             // square.textContent = tile ? f.icon : ''

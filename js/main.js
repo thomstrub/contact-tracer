@@ -20,9 +20,9 @@ class Tile {
         this.id;
         this.adjoiningVirus = 0;
         this.adjoiningTiles = [];
-        this.isReveald = false;
+        this.isReveald;
         this.isVirus;
-        this.isQuarentined = false;
+        this.isQuarentined;
     }
     toggleRevealed() {
         this.isReveald = true;
@@ -120,6 +120,8 @@ function initializeBoard(){
             board[i][j].adjoiningTiles = defineAdjacentTiles(i, j);
             board[i][j].isVirus = defineVirus(i, j, virusLocations);
             board[i][j].adjoiningVirus = countAdjacentlVirus(board[i][j].adjoiningTiles, virusLocations);
+            board[i][j].isReveald = false;
+            board[i][j].isQuarentined = false;
             console.log(`initialized: ${board[i][j].isVirus}`);
         }
     }
@@ -193,6 +195,8 @@ function render(){
                 if(tile.isVirus === true){
                     console.log(`${tile.id} is a virus`);
                     tileElements[idx][jdx].textContent = 'V';
+                } else {
+                    tileElements[idx][jdx].textContent = tile.adjoiningVirus
                 }
             } else {
                 tileElements[idx][jdx].setAttribute('class', 'square, shadow');

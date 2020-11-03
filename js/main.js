@@ -30,30 +30,36 @@ class Tile {
     // tally the number of adjacent squares in which 'isVirus = true'
     countAdjacentlVirus() {
         let count = 0;
-        this.adjoiningTiles.forEach(function(adjoined){
-            if (adjoined.isVirus === true) {
-                count++;
-            }
+        board.forEach(function(row, idx){
+            row.forEach(function(tile, jdx){
+                if(this.adjoiningTiles.includes(tile)){
+                    if(tile.isVirus === true) {
+                        count++;
+                    }
+                }
+            });
+        });
+        // this.adjoiningTiles.forEach(function(adjoined){
+        //     if (adjoined.isVirus === true) {
+        //         count++;
+        //     }
             return count;
-        })
-        return
+        
     }
 
     // when a tile is revealed by the user, this.revealed = true
     // if it has no adjacent virus, each adjacent virus is revealed and so on.
-    revealAndSpread() {
-        this.toggleRevealed();
+    // revealAndSpread(adjoined) {
+    //     this.toggleRevealed();
 
-        // recursive spreading
-
-        // if(this.countAdjacentlVirus() > 0){
-        //     return;
-        // } else {
-        //     this.adjoiningTiles.forEach(function(adjoined){
-        //         adjoined.revealAndSpread();
-        //     });
-        // }
-    }
+    //     if(this.countAdjacentlVirus() > 0){
+    //         return;
+    //     } else {
+    //         this.adjoiningTiles.forEach(function(adjoined){
+    //             this.revealAndSpread(adjoined);
+    //         });
+    //     }
+    // }
 }
 
 
@@ -88,7 +94,7 @@ function initialize(){
     virusCount = Math.floor(rows * columns * setting);
     board = initializeBoard();
     
-    renderBoard();
+    
     render(); // need to separate the initial board render from the update render
 }
 
@@ -115,7 +121,7 @@ function initializeBoard(){
 
 function render(){
     console.log('render is rendering');
-
+    renderBoard();
     board.forEach((row, idx) => {
         row.forEach((tile, jdx) => {
             tileElements[idx][jdx].style.backgroundColor = 'lightgray';
@@ -132,13 +138,6 @@ function render(){
             }
         });
     });
-    // tileElements.forEach(function(element) {
-    //     if(tile.isVirus === true && tile.isReveald === true){
-    //         square.innerText = `${generateId(i, j)} V`;
-    //     } else if(tile.isReveald === true){
-    //         square.innerText = `${generateId(i, j)} r`;
-    //     }
-    // });
 }
 
 // create tile elements and cache them in the tileElements variable
@@ -213,12 +212,40 @@ function tileClick(e){
     board.forEach(function(row, idx){
         row.forEach(function(tile, jdx){
             if(tile.id === e.target.id){
-                tile.revealAndSpread();
+                // tile.revealAndSpread();
+                recursiveReveal(tile);
             }
         });
     });
     render();
 }
+
+function recursiveReveal(clickedTile){
+    console.log(clickedTile.adjoiningTiles);
+    console.log(clickedTile.countAdjacentlVirus());
+    // if (clickedTile.countAdjacentlVirus > 0){
+    //     clickedTile.toggleRevealed();
+    // } else {
+    //     board.forEach(function(row, idx){
+    //         row.forEach(function(tile, jdx){
+    //             if(clickedTile.adjoiningTiles.includes(tile.id) === true){
+    //                 clickedTile.toggleRevealed();
+    //                 recursiveReveal(tile);
+    //             }
+                    
+    //             });
+    //         });
+    // }
+    
+    }
+
+    // if(clickedTile.countAdjacentlVirus() > 0){
+    //     return;
+    // } else {
+    //     clickedTile.adjoiningTiles.forEach(function(adjoined){
+    //         recursiveReveal(adjoined);
+    //     });
+    // }
 
 
 /// code recycle bin

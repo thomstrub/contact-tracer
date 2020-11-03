@@ -57,6 +57,7 @@ let virusCount;
 let setting;
 let board = [];
 let virusLocations;
+let targetedTile;
 
 /*----- cached element references -----*/
 let gameBoard = document.getElementById('board')
@@ -232,14 +233,16 @@ function renderBoard(){
 
 function tileClick(e){
     console.log(e.target.id);
-    board.forEach(function(row, idx){
-        row.forEach(function(tile, jdx){
-            if(tile.id === e.target.id){
-                // tile.revealAndSpread();
-                recursiveReveal(tile);
-            }
-        });
-    });
+    targetedTile = board[Number(e.target.id.charAt(1))][Number(e.target.id.charAt(3))];
+    console.log(targetedTile);
+    // board.forEach(function(row, idx){
+    //     row.forEach(function(tile, jdx){
+    //         if(tile.id === e.target.id){
+    //             // tile.revealAndSpread();
+    //             recursiveReveal(tile);
+    //         }
+    //     });
+    // });
     render();
 }
 

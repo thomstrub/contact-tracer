@@ -135,7 +135,7 @@ function generateId(x, y){
 function countAdjacentlVirus(adjacentArr, virusLocationArr) {
     let count = 0;
     adjacentArr.forEach(tile => {
-        virusLocations.forEach(virusLocation => {
+        virusLocationArr.forEach(virusLocation => {
             if(tile === virusLocation){
                 count++;
             } 
@@ -150,11 +150,11 @@ function defineAdjacentTiles(x, y){
     let adjacentArr = [];
     // both x and y values must be either one less, equal to, or one more
     for(let i = -1; i < 2; i++){
-        if(x + i >= 0 && x + i < rows){
+        if((x + i) >= 0 && (x + i) < rows){
             for(let j = -1; j < 2; j++){
-                if(y + j >= 0 && y + j < columns){
+                if((y + j) >= 0 && (y + j) < columns){
                     if(i !== 0 || j !== 0){
-                    adjacentArr.push(generateId((x + i),(y + i)));
+                    adjacentArr.push(generateId((x + i),(y + j)));
                     }
                 }
             }

@@ -90,7 +90,7 @@ function initialize(){
     // each tile 'click release'
 
     newGameButtonElem.addEventListener('click', initialize);
-    gameBoardElem.addEventListener('mouseup', tileClick);
+    gameBoardElem.addEventListener('click', tileClick);
     gameBoardElem.addEventListener('contextmenu', quarantineClick);
     
     render(); // need to separate the initial board render from the update render
@@ -269,10 +269,23 @@ function tileClick(e){
     targetedTile = board[Number(e.target.id.charAt(1))][Number(e.target.id.charAt(3))];
     if(targetedTile.isVirus === true){
         gameState.lose = true;
-        gameBoardElem.removeEventListener('mouseup', tileClick);
+        gameBoardElem.removeEventListener('click', tileClick);
+    } else {
+        console.log(targetedTile);
+        recursiveReveal(targetedTile);
+        let winCondition = board.flat().every(winConditionLogic);
+        if(winCondition === true){
+            gameState.win = true;
+        }
+        // board.forEach((row, i) => {
+        //     row.forEach((tile, j) => {
+        //       if(tile.isVirus !== true){
+        //           if()
+        //       }
+        //     });
+        // });
     }
-    console.log(targetedTile);
-    recursiveReveal(targetedTile);
+   
     // board.forEach(function(row, idx){
     //     row.forEach(function(tile, jdx){
     //         if(tile.id === e.target.id){
@@ -316,6 +329,7 @@ function recursiveReveal(clickedTile){
         });
     }
 
+
     // if (clickedTile.countAdjacentlVirus > 0){
     //     clickedTile.toggleRevealed();
     // } else {
@@ -330,6 +344,12 @@ function recursiveReveal(clickedTile){
     //         });
     // }
     
+    }
+
+    function winConditionLogic (tile){
+        if (tile.isVirus === false){
+            return (tile.isReveald === true ? true : false);
+        }
     }
 
     // if(clickedTile.countAdjacentlVirus() > 0){

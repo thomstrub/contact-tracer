@@ -6,6 +6,12 @@ const difficulty = {
     medium: .1563
 };
 
+const gameState = {
+    win: false,
+    lose: false,
+    firstMove: true
+};
+
 // each tile should have an id
 // each tile needs a variable to store adjoining tiles
 // each tile needs a variable to store if it has been revealed or not
@@ -38,23 +44,6 @@ class Tile {
                 break;
         }
     }
-
-    // tally the number of adjacent squares in which 'isVirus = true'
-
-
-    // when a tile is revealed by the user, this.revealed = true
-    // if it has no adjacent virus, each adjacent virus is revealed and so on.
-    // revealAndSpread(adjoined) {
-    //     this.toggleRevealed();
-
-    //     if(this.countAdjacentlVirus() > 0){
-    //         return;
-    //     } else {
-    //         this.adjoiningTiles.forEach(function(adjoined){
-    //             this.revealAndSpread(adjoined);
-    //         });
-    //     }
-    // }
 }
 
 
@@ -207,23 +196,15 @@ function render(){
     renderBoard();
     board.forEach((row, idx) => {
         row.forEach((tile, jdx) => {
-            // tileElements[idx][jdx].style.backgroundColor = 'lightgray';
-            if(tile.isReveald === true){
-                console.log(`${tile.id} is revealed`)
-                tileElements[idx][jdx].setAttribute('class', 'square revealed');
-                if(tile.isVirus === true){
-                    console.log(`${tile.id} is a virus`);
-                    tileElements[idx][jdx].textContent = 'V';
-                } else {
-                    tileElements[idx][jdx].textContent = tile.adjoiningVirus
-                }
-            } else if(tile.isQuarantined === true){
-                tileElements[idx][jdx].textContent = 'Q';
-                tileElements[idx][jdx].setAttribute('class', 'square shadow quarantined');
-            } else {
-                tileElements[idx][jdx].setAttribute('class', 'square shadow');
-                tileElements[idx][jdx].textContent = `${generateId(idx, jdx)}`;
+            
+            if(gameState.lose === true){
+                renderLoss();
+            }else if(gameState.win === true){
+                newGameButtonElem.innerText = ":)"
+            }else {
+                console.log('regular game play');
             }
+            renderTile(tile, idx, jdx);
         });
     });
     virusRemainingElem.innerText = virusCountRender;
@@ -242,10 +223,6 @@ function renderBoard(){
         row.forEach((tile, j) => {
             let square = document.createElement('div')
             square.setAttribute('id', `${generateId(i, j)}`)
-            
-           
-            // square.style.border = '1px solid dark-gray';
-            // square.textContent = tile ? f.icon : ''
             gameBoardElem.appendChild(square)
             tileElements[i].push(document.getElementById(generateId(i, j)));
         });
@@ -253,6 +230,31 @@ function renderBoard(){
     }
 }
 
+function renderTile(tile, idx, jdx){
+    if(tile.isReveald === true){
+        console.log(`${tile.id} is revealed`)
+        tileElements[idx][jdx].setAttribute('class', 'square revealed');
+        if(tile.isVirus === true){
+            console.log(`${tile.id} is a virus`);
+            tileElements[idx][jdx].textContent = 'V';
+        } else {
+            tileElements[idx][jdx].textContent = tile.adjoiningVirus
+        }
+    } else if(tile.isQuarantined === true){
+        tileElements[idx][jdx].textContent = 'Q';
+        tileElements[idx][jdx].setAttribute('class', 'square shadow quarantined');
+    } else {
+        tileElements[idx][jdx].setAttribute('class', 'square shadow');
+        tileElements[idx][jdx].textContent = `${generateId(idx, jdx)}`;
+    }
+}
+
+function renderLoss(){
+    newGameButtonElem.innerText = ":("
+    virusLocations.forEach(function(location){
+        board[Number(location.charAt(1))][Number(location.charAt(3))].isReveald = true;
+    });
+}
 
 
 // /*-------------------event listener functions----------------------*/ 
@@ -288,6 +290,7 @@ function adjustVirusCountRender(tile){
 
 function recursiveReveal(clickedTile){
     clickedTile.toggleRevealed();
+   
     console.log('toggleRevealed:', clickedTile.adjoiningTiles);
     if(clickedTile.adjoiningVirus !== 0){
         return;
@@ -344,6 +347,21 @@ function recursiveReveal(clickedTile){
 
 
 
+    // tally the number of adjacent squares in which 'isVirus = true'
 
+
+    // when a tile is revealed by the user, this.revealed = true
+    // if it has no adjacent virus, each adjacent virus is revealed and so on.
+    // revealAndSpread(adjoined) {
+    //     this.toggleRevealed();
+
+    //     if(this.countAdjacentlVirus() > 0){
+    //         return;
+    //     } else {
+    //         this.adjoiningTiles.forEach(function(adjoined){
+    //             this.revealAndSpread(adjoined);
+    //         });
+    //     }
+    // }
 
 

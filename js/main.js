@@ -9,7 +9,7 @@ const difficulty = {
 const gameState = {
     win: false,
     lose: false,
-    firstMove: true
+    firstClick: true
 };
 
 // each tile should have an id
@@ -35,6 +35,7 @@ class Tile {
         this.isReveald = true;
     }
     toggleQuarantined() {
+        this.quarantineClickCount++;
         switch(this.isQuarantined) {
             case true :
                 return this.isQuarantined = false;
@@ -65,14 +66,7 @@ let newGameButtonElem = document.getElementById('new-game');
 let tileElements = [];
 
 
-/*----- event listeners -----*/
 
-// new game button - 'click'
-// each tile 'click release'
-
-newGameButtonElem.addEventListener('click', initialize);
-gameBoardElem.addEventListener('click', tileClick);
-gameBoardElem.addEventListener('contextmenu', quarantineClick);
 
 initialize();
 
@@ -80,6 +74,9 @@ initialize();
 
 /*------------------------- INIT FUNCTION -------------------------------------------*/
 function initialize(){
+    gameState.lose = false;
+    gameState.win = false;
+    gameState.firstClick = true;
     timer = 0;
     setting = difficulty.easy;
     virusCount = Math.round(rows * columns * setting);
@@ -87,7 +84,14 @@ function initialize(){
     board.length > 0 ? console.log(board.length) : createBoard();
     initializeBoard();
     
-    
+        /*----- event listeners -----*/
+
+    // new game button - 'click'
+    // each tile 'click release'
+
+    newGameButtonElem.addEventListener('click', initialize);
+    gameBoardElem.addEventListener('mouseup', tileClick);
+    gameBoardElem.addEventListener('contextmenu', quarantineClick);
     
     render(); // need to separate the initial board render from the update render
 }
@@ -200,9 +204,10 @@ function render(){
             if(gameState.lose === true){
                 renderLoss();
             }else if(gameState.win === true){
-                newGameButtonElem.innerText = ":)"
+                newGameButtonElem.innerText = ": )"
             }else {
                 console.log('regular game play');
+                newGameButtonElem.innerText = ": |"
             }
             renderTile(tile, idx, jdx);
         });
@@ -250,7 +255,7 @@ function renderTile(tile, idx, jdx){
 }
 
 function renderLoss(){
-    newGameButtonElem.innerText = ":("
+    newGameButtonElem.innerText = ": ("
     virusLocations.forEach(function(location){
         board[Number(location.charAt(1))][Number(location.charAt(3))].isReveald = true;
     });
@@ -262,9 +267,12 @@ function renderLoss(){
 function tileClick(e){
     console.log(e.target.id);
     targetedTile = board[Number(e.target.id.charAt(1))][Number(e.target.id.charAt(3))];
+    if(targetedTile.isVirus === true){
+        gameState.lose = true;
+        gameBoardElem.removeEventListener('mouseup', tileClick);
+    }
     console.log(targetedTile);
     recursiveReveal(targetedTile);
-    removeEventListener('click', tileClick);
     // board.forEach(function(row, idx){
     //     row.forEach(function(tile, jdx){
     //         if(tile.id === e.target.id){
@@ -277,9 +285,14 @@ function tileClick(e){
 }
 
 function quarantineClick(e){
+    e.preventDefault();
+    console.log(board[Number(e.target.id.charAt(1))][Number(e.target.id.charAt(3))]);
     targetedTile = board[Number(e.target.id.charAt(1))][Number(e.target.id.charAt(3))];
-    targetedTile.toggleQuarantined;
+    targetedTile.toggleQuarantined();
+    console.log(board[Number(e.target.id.charAt(1))][Number(e.target.id.charAt(3))].quarantineClickCount);
     adjustVirusCountRender(targetedTile);
+    render();
+    return false;
 }
 
 function adjustVirusCountRender(tile){

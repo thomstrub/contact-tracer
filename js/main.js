@@ -23,6 +23,7 @@ class Tile {
         this.isReveald;
         this.isVirus;
         this.isQuarantined;
+        this.quarantineClickCount;
     }
     toggleRevealed() {
         this.isReveald = true;
@@ -88,9 +89,10 @@ function initialize(){
     timer = 0;
     setting = difficulty.easy;
     virusCount = Math.round(rows * columns * setting);
-    virusCountRender = virusCount;
+    // virusCountRender = virusCount;
     board.length > 0 ? console.log(board.length) : createBoard();
     initializeBoard();
+    
     
     
     render(); // need to separate the initial board render from the update render
@@ -133,6 +135,7 @@ function initializeBoard(){
             board[i][j].adjoiningVirus = countAdjacentlVirus(board[i][j].adjoiningTiles, virusLocations);
             board[i][j].isReveald = false;
             board[i][j].isQuarantined = false;
+            board[i][j].quarantineClickCount = 0;
             console.log(`initialized: ${board[i][j].isVirus}`);
         }
     }
@@ -261,6 +264,18 @@ function tileClick(e){
     //     });
     // });
     render();
+}
+
+function quarantineClick(e){
+    targetedTile = board[Number(e.target.id.charAt(1))][Number(e.target.id.charAt(3))];
+    targetedTile.toggleQuarantined;
+    adjustVirusCountRender();
+}
+
+function adjustVirusCountRender(tile){
+    if(tile.quarantineClickCount > 0){
+        tile.quarantineClickCount % 2 === 0 ? virusCountRender++ : virusCountRender--;
+}
 }
 
 function recursiveReveal(clickedTile){

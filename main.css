@@ -39,6 +39,10 @@ button {
     min-width: 75px;
 }
 
+button:hover{
+    background-color: rgb(172, 145, 185);
+}
+
 #board {
     border: .25vh solid grey;
     display: grid;
@@ -52,8 +56,11 @@ button {
     border: 3px solid gray;
 }
 
+.square:hover {
+    background-color:rgb(172, 145, 185);
+}
 .square {
-    font-size: 6vh;
+    font-size: 2vh;
     text-align: center;
     color: black;
     background-color: gray;
@@ -73,5 +80,5 @@ button {
 }
 
 .quarantined {
-
+   
 }

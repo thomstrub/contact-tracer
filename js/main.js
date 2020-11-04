@@ -69,27 +69,32 @@ let virusLocations;
 let targetedTile;
 
 /*----- cached element references -----*/
-let gameBoard = document.getElementById('board')
-let virusRemaining = document.getElementById('virus-remaining');
+let gameBoardElem = document.getElementById('board')
+let virusRemainingElem = document.getElementById('virus-remaining');
 let timerElem = document.getElementById('timer');
-let newGameButton = document.getElementById('new-game');
+let newGameButtonElem = document.getElementById('new-game');
 let tileElements = [];
+
+
 /*----- event listeners -----*/
 
 // new game button - 'click'
 // each tile 'click release'
 
-newGameButton.addEventListener('click', initialize);
-gameBoard.addEventListener('mouseup', tileClick)
+newGameButtonElem.addEventListener('click', initialize);
+gameBoardElem.addEventListener('click', tileClick);
+gameBoardElem.addEventListener('contextmenu', quarantineClick);
 
 initialize();
 
 /*----- functions -----*/
+
+/*------------------------- INIT FUNCTION -------------------------------------------*/
 function initialize(){
     timer = 0;
     setting = difficulty.easy;
     virusCount = Math.round(rows * columns * setting);
-    // virusCountRender = virusCount;
+    virusCountRender = virusCount;
     board.length > 0 ? console.log(board.length) : createBoard();
     initializeBoard();
     
@@ -202,10 +207,10 @@ function render(){
     renderBoard();
     board.forEach((row, idx) => {
         row.forEach((tile, jdx) => {
-            tileElements[idx][jdx].style.backgroundColor = 'lightgray';
+            // tileElements[idx][jdx].style.backgroundColor = 'lightgray';
             if(tile.isReveald === true){
                 console.log(`${tile.id} is revealed`)
-                tileElements[idx][jdx].setAttribute('class', 'square, revealed');
+                tileElements[idx][jdx].setAttribute('class', 'square revealed');
                 if(tile.isVirus === true){
                     console.log(`${tile.id} is a virus`);
                     tileElements[idx][jdx].textContent = 'V';
@@ -214,13 +219,14 @@ function render(){
                 }
             } else if(tile.isQuarantined === true){
                 tileElements[idx][jdx].textContent = 'Q';
-                tileElements[idx][jdx].setAttribute('class', 'square, shadow, quarantined');
+                tileElements[idx][jdx].setAttribute('class', 'square shadow quarantined');
             } else {
-                tileElements[idx][jdx].setAttribute('class', 'square, shadow');
+                tileElements[idx][jdx].setAttribute('class', 'square shadow');
                 tileElements[idx][jdx].textContent = `${generateId(idx, jdx)}`;
             }
         });
     });
+    virusRemainingElem.innerText = virusCountRender;
 
 }
 
@@ -240,7 +246,7 @@ function renderBoard(){
            
             // square.style.border = '1px solid dark-gray';
             // square.textContent = tile ? f.icon : ''
-            gameBoard.appendChild(square)
+            gameBoardElem.appendChild(square)
             tileElements[i].push(document.getElementById(generateId(i, j)));
         });
     });
@@ -255,6 +261,8 @@ function tileClick(e){
     console.log(e.target.id);
     targetedTile = board[Number(e.target.id.charAt(1))][Number(e.target.id.charAt(3))];
     console.log(targetedTile);
+    recursiveReveal(targetedTile);
+    removeEventListener('click', tileClick);
     // board.forEach(function(row, idx){
     //     row.forEach(function(tile, jdx){
     //         if(tile.id === e.target.id){
@@ -269,7 +277,7 @@ function tileClick(e){
 function quarantineClick(e){
     targetedTile = board[Number(e.target.id.charAt(1))][Number(e.target.id.charAt(3))];
     targetedTile.toggleQuarantined;
-    adjustVirusCountRender();
+    adjustVirusCountRender(targetedTile);
 }
 
 function adjustVirusCountRender(tile){
@@ -279,8 +287,19 @@ function adjustVirusCountRender(tile){
 }
 
 function recursiveReveal(clickedTile){
-    console.log(clickedTile.adjoiningTiles);
-    console.log(clickedTile.adjoiningVirus);
+    clickedTile.toggleRevealed();
+    console.log('toggleRevealed:', clickedTile.adjoiningTiles);
+    if(clickedTile.adjoiningVirus !== 0){
+        return;
+    } else {
+        console.log('virus log ', clickedTile.adjoiningVirus);
+        clickedTile.adjoiningTiles.forEach(function(tile){
+            let adjacentTile = board[Number(tile.charAt(1))][Number(tile.charAt(3))];
+                    adjacentTile.toggleRevealed();
+                    return;  
+        });
+    }
+
     // if (clickedTile.countAdjacentlVirus > 0){
     //     clickedTile.toggleRevealed();
     // } else {

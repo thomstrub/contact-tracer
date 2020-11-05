@@ -62,28 +62,28 @@ button:hover{
 }
 
 .square:hover {
-    background-color:rgb(197, 191, 199);
+    background-color:#D6EAE9;
 }
 .square {
     font-size: 3vh;
     text-align: center;
     border-radius: 2px;
-    color: black;
-    background-color: rgb(219, 191, 204);
+    color: #3E4146;
+    background-color: #CDD7E7;
     
 
 }
 
 .shadow {
     border: 1px soid darkgray;
-    -moz-box-shadow:    1px 3px 3px 5px black;
-    -webkit-box-shadow: 1px 3px 3px 5px black;
-    box-shadow:         1px 3px 3px 5px black;
+    -moz-box-shadow:    1px 3px 3px 5px #3E4146;
+    -webkit-box-shadow: 1px 3px 3px 5px #3E4146;
+    box-shadow:         1px 3px 3px 5px #3E4146;
 }
 
 .revealed {
     border: 1px soid darkgray;
-    background-color: rgb(182, 161, 171);
+    background-color: #8E95A0;
 }
 
 .quarantined {

@@ -208,10 +208,10 @@ function render(){
             if(gameState.lose === true){
                 renderLoss();
             }else if(gameState.win === true){
-                newGameButtonElem.innerText = ": )"
+                newGameButtonElem.innerText = "😎"
             }else {
                 console.log('regular game play');
-                newGameButtonElem.innerText = ": |"
+                newGameButtonElem.innerText = "😷"
             }
             renderTile(tile, idx, jdx);
         });
@@ -244,7 +244,7 @@ function renderTile(tile, idx, jdx){
         tileElements[idx][jdx].setAttribute('class', 'square revealed');
         if(tile.isVirus === true){
             console.log(`${tile.id} is a virus`);
-            tileElements[idx][jdx].textContent = 'V';
+            tileElements[idx][jdx].textContent = '🦠';
         } else {
             tileElements[idx][jdx].textContent = tile.adjoiningVirus
         }
@@ -258,7 +258,7 @@ function renderTile(tile, idx, jdx){
 }
 
 function renderLoss(){
-    newGameButtonElem.innerText = ": ("
+    newGameButtonElem.innerText = "🤢"
     virusLocations.forEach(function(location){
         board[Number(location.charAt(1))][Number(location.charAt(3))].isRevealed = true;
     });

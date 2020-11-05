@@ -34,13 +34,16 @@ body {
     min-width: 100px;
     display: flex;
     justify-content: center;
+    align-content: center;
 }
 button {
-    min-width: 75px;
+    min-width: 100px;
+    font-size: 3vh;
+    border-radius: 3px;
 }
 
 button:hover{
-    background-color: rgb(172, 145, 185);
+    background-color: rgb(197, 191, 199);
 }
 
 #board {
@@ -57,13 +60,14 @@ button:hover{
 }
 
 .square:hover {
-    background-color:rgb(172, 145, 185);
+    background-color:rgb(197, 191, 199);
 }
 .square {
-    font-size: 2vh;
+    font-size: 3vh;
     text-align: center;
+    border-radius: 2px;
     color: black;
-    background-color: gray;
+    background-color: rgb(165, 159, 167);
     
 
 }

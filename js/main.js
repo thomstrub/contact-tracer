@@ -309,9 +309,15 @@ function adjustVirusCountRender(tile){
 }
 
 function recursiveReveal(clickedTile){ // use while loop
-
     clickedTile.toggleRevealed();
-    if(clickedTile.adjoiningVirus !== 0){
+    while(clickedTile.adjoiningVirus > 0){
+        for(let i = 0; i < clickedTile.adjoiningTiles.length; i++){
+            let adjacentTile = board[Number(clickedTile.adjoiningTiles.charAt(1))][Number(clickedTile.adjoiningTiles.charAt(3))];
+            recursiveReveal(adjacentTile);
+        }
+        
+    }
+    if(){
         return;
     } else {
         clickedTile.toggleRevealed();

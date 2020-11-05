@@ -51,6 +51,7 @@ class Tile {
 
 /*----- app's state (variables) -----*/
 let timer;
+let intervalID;
 let virusCount;
 let virusCountRender;
 let setting;
@@ -87,12 +88,13 @@ function initialize(){
     board.length > 0 ? console.log(board.length) : createBoard();
     initializeBoard();
     
+    
         /*----- event listeners -----*/
 
     // new game button - 'click'
     // each tile 'click release'
 
-    newGameButtonElem.addEventListener('click', initialize);
+    newGameButtonElem.addEventListener('click', restartGame);
     gameBoardElem.addEventListener('click', tileClick);
     gameBoardElem.addEventListener('contextmenu', quarantineClick);
     
@@ -197,6 +199,8 @@ function virusInit(){
     }
     return virusArr;   
 }
+
+
 /*------------------------------ render and render helper functions ----------------------------*/
 
 function render(){
@@ -216,7 +220,8 @@ function render(){
             renderTile(tile, idx, jdx);
         });
     });
-    virusRemainingElem.innerText = virusCountRender;
+    virusRemainingElem.textContent = virusCountRender;
+    timerElem.textContent = timer;
 }
 
 // create tile elements and cache them in the tileElements variable
@@ -265,7 +270,7 @@ function renderLoss(){
 }
 
 
-/*---------------------------event listener functions--------------------------------*/ 
+/*---------------------------event listener / controller functions--------------------------------*/ 
 
 function tileClick(e){
     console.log(e.target.id);
@@ -274,6 +279,7 @@ function tileClick(e){
         if(targetedTile.isRevealed === false && targetedTile.isQuarantined === false){
             if(targetedTile.isVirus === true){
                 gameState.lose = true;
+                stopTimer();
                 // gameBoardElem.removeEventListener('click', tileClick);
             } else {
                 console.log(targetedTile);
@@ -281,9 +287,14 @@ function tileClick(e){
                 let winCondition = nonVirusCellIds.every(winConditionLogic);
                 if(winCondition === true){
                     gameState.win = true;
+                    stopTimer();
                 }
 
             }
+    }
+    if(gameState.firstClick === true){
+        gameState.firstClick = false;
+        startTimer();
     }
     render();
     }
@@ -300,6 +311,11 @@ function quarantineClick(e){
     return false;
 }
 
+function restartGame(){
+    initialize();
+    stopTimer();
+}
+
 /*------------------- Event Listener Helper Functions --------------------*/
 
 function adjustVirusCountRender(tile){
@@ -310,15 +326,15 @@ function adjustVirusCountRender(tile){
 
 function recursiveReveal(clickedTile){ // use while loop
     console.log('recursive', clickedTile.adjoiningVirus);
+    clickedTile.toggleRevealed();
     if(clickedTile.adjoiningVirus > 0){
-        clickedTile.toggleRevealed();
         return;
     } else{
         for(let i = 0; i < clickedTile.adjoiningTiles.length; i++){
             console.log('recursive firing');
             let adjacentTile = board[Number(clickedTile.adjoiningTiles[i].charAt(1))][Number(clickedTile.adjoiningTiles[i].charAt(3))];
-            clickedTile.toggleRevealed();
             adjacentTile.toggleRevealed();
+            // recursiveReveal(adjacentTile);
             // for(let j = 0; j < adjacentTile.adjoiningTiles.length; j++){
             //     console.log('recursiverecursive is firing');
             //     let adjacentAdjacentTile = board[Number(adjacentTile.adjoiningTiles[j].charAt(1))][Number(adjacentTile.adjoiningTiles[j].charAt(3))];
@@ -340,8 +356,7 @@ function recursiveReveal(clickedTile){ // use while loop
     //                 // recursiveReveal(adjacentTile);
     //                 return;  
     //     });
-    
-    
+       
       
 }
 
@@ -349,64 +364,16 @@ function winConditionLogic (tile){
     return (tile.isRevealed === true ? true : false);
 }
 
-    // if(clickedTile.countAdjacentlVirus() > 0){
-    //     return;
-    // } else {
-    //     clickedTile.adjoiningTiles.forEach(function(adjoined){
-    //         recursiveReveal(adjoined);
-    //     });
-    // }
+function stopTimer(){
+    clearInterval(intervalID);
+}
 
+function startTimer(){
+    intervalID = setInterval(incrementTimer, 1000);
+    timer = 0;
+}
 
-/// -----------------------------------code recycle bin----------------------------------------
-// render board 
-
-// adjust the css so that the colums in the CSS will always be the number of columns
-// on the game board
-// board.forEach((e, i) => {
-//     e.forEach((f, j) => {
-//         let square = document.createElement('div')
-//         square.setAttribute('id', `r${i}c${j}`)
-//         square.setAttribute('class', 'square, shadow')
-//         square.style.backgroundColor = 'lightgray';
-//         // square.style.border = '1px solid dark-gray';
-//         square.textContent = f ? f.icon : ''
-//         gameBoard.appendChild(square)
-//     })
-// })
-
-
-
-    // tally the number of adjacent squares in which 'isVirus = true'
-
-
-    // when a tile is revealed by the user, this.revealed = true
-    // if it has no adjacent virus, each adjacent virus is revealed and so on.
-    // revealAndSpread(adjoined) {
-    //     this.toggleRevealed();
-
-    //     if(this.countAdjacentlVirus() > 0){
-    //         return;
-    //     } else {
-    //         this.adjoiningTiles.forEach(function(adjoined){
-    //             this.revealAndSpread(adjoined);
-    //         });
-    //     }
-    // }
-
-
-    // ---------- recursion ----------------------
- // if (clickedTile.countAdjacentlVirus > 0){
-    //     clickedTile.toggleRevealed();
-    // } else {
-    //     board.forEach(function(row, idx){
-    //         row.forEach(function(tile, jdx){
-    //             if(clickedTile.adjoiningTiles.includes(tile.id) === true){
-    //                 clickedTile.toggleRevealed();
-    //                 recursiveReveal(tile);
-    //             }
-                    
-    //             });
-    //         });
-    // 
-
+function incrementTimer(){
+    timer++;
+    render();
+}

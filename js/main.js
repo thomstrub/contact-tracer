@@ -249,16 +249,16 @@ function renderTile(tile, idx, jdx){
             tileElements[idx][jdx].textContent = tile.adjoiningVirus
         }
     } else if(tile.isQuarantined === true){
-        tileElements[idx][jdx].textContent = 'Q';
+        tileElements[idx][jdx].textContent = '🚩';
         tileElements[idx][jdx].setAttribute('class', 'square shadow quarantined');
     } else {
         tileElements[idx][jdx].setAttribute('class', 'square shadow');
-        tileElements[idx][jdx].textContent = `${generateId(idx, jdx)}`;
+        tileElements[idx][jdx].textContent = '';
     }
 }
 
 function renderLoss(){
-    newGameButtonElem.innerText = "🤢"
+    newGameButtonElem.innerText = "🤒"
     virusLocations.forEach(function(location){
         board[Number(location.charAt(1))][Number(location.charAt(3))].isRevealed = true;
     });
@@ -309,28 +309,40 @@ function adjustVirusCountRender(tile){
 }
 
 function recursiveReveal(clickedTile){ // use while loop
-    clickedTile.toggleRevealed();
-    while(clickedTile.adjoiningVirus > 0){
+    console.log('recursive', clickedTile.adjoiningVirus);
+    if(clickedTile.adjoiningVirus > 0){
+        clickedTile.toggleRevealed();
+        return;
+    } else{
         for(let i = 0; i < clickedTile.adjoiningTiles.length; i++){
-            let adjacentTile = board[Number(clickedTile.adjoiningTiles.charAt(1))][Number(clickedTile.adjoiningTiles.charAt(3))];
-            recursiveReveal(adjacentTile);
+            console.log('recursive firing');
+            let adjacentTile = board[Number(clickedTile.adjoiningTiles[i].charAt(1))][Number(clickedTile.adjoiningTiles[i].charAt(3))];
+            clickedTile.toggleRevealed();
+            adjacentTile.toggleRevealed();
+            // for(let j = 0; j < adjacentTile.adjoiningTiles.length; j++){
+            //     console.log('recursiverecursive is firing');
+            //     let adjacentAdjacentTile = board[Number(adjacentTile.adjoiningTiles[j].charAt(1))][Number(adjacentTile.adjoiningTiles[j].charAt(3))];
+            //     adjacentAdjacentTile.toggleRevealed;
+            // }
         }
         
-    }
-    if(){
         return;
-    } else {
-        clickedTile.toggleRevealed();
-        console.log('virus log ', clickedTile.adjoiningVirus);
-        clickedTile.adjoiningTiles.forEach(function(tile){
-            let adjacentTile = board[Number(tile.charAt(1))][Number(tile.charAt(3))];
-                    adjacentTile.toggleRevealed();
-                    // recursiveReveal(adjacentTile);
-                    return;  
-        });
-    
     }
+    // }
+    // if(){
+    //     return;
+    // } else {
+    //     clickedTile.toggleRevealed();
+    //     console.log('virus log ', clickedTile.adjoiningVirus);
+    //     clickedTile.adjoiningTiles.forEach(function(tile){
+    //         let adjacentTile = board[Number(tile.charAt(1))][Number(tile.charAt(3))];
+    //                 adjacentTile.toggleRevealed();
+    //                 // recursiveReveal(adjacentTile);
+    //                 return;  
+    //     });
     
+    
+      
 }
 
 function winConditionLogic (tile){
@@ -396,4 +408,5 @@ function winConditionLogic (tile){
                     
     //             });
     //         });
-    // }
+    // 
+

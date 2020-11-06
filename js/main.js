@@ -210,6 +210,7 @@ function render(){
         row.forEach((tile, jdx) => {
             
             if(gameState.lose === true){
+                stopTimer();
                 renderLoss();
             }else if(gameState.win === true){
                 newGameButtonElem.innerText = "😎"
@@ -251,7 +252,12 @@ function renderTile(tile, idx, jdx){
             console.log(`${tile.id} is a virus`);
             tileElements[idx][jdx].textContent = '🦠';
         } else {
-            tileElements[idx][jdx].textContent = tile.adjoiningVirus
+            if(tile.adjoiningVirus < 1){
+                tileElements[idx][jdx].textContent = "";
+            }else {
+                tileElements[idx][jdx].textContent = tile.adjoiningVirus
+            }
+            
         }
     } else if(tile.isQuarantined === true){
         tileElements[idx][jdx].textContent = '🚩';
@@ -265,8 +271,10 @@ function renderTile(tile, idx, jdx){
 function renderLoss(){
     newGameButtonElem.innerText = "🤒"
     virusLocations.forEach(function(location){
-        board[Number(location.charAt(1))][Number(location.charAt(3))].isRevealed = true;
+        let virusTile = board[Number(location.charAt(1))][Number(location.charAt(3))];
+        virusTile.isRevealed = true;
     });
+    console.log('loss rendered');
 }
 
 
@@ -280,7 +288,6 @@ function tileClick(e){
             if(targetedTile.isVirus === true){
                 gameState.lose = true;
                 stopTimer();
-                // gameBoardElem.removeEventListener('click', tileClick);
             } else {
                 console.log(targetedTile);
                 recursiveReveal(targetedTile);

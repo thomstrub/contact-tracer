@@ -6,23 +6,30 @@
     <title>Contact Tracer</title>
     <link rel="stylesheet" href="main.css">
   <script defer src="js/main.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="shell">
-        <div id="stats">
-            <div class="scoreboard" id="virus-remaining">
-                <p>000</p>
+    <div class="container">
+        <header>
+            <h1>contact tracer</h2>
+            <p>click the squares, avoid the virus, right click to quarantine</p>
+            </header>
+        <div id="shell">
+            <div id="stats">
+                <div class="scoreboard" id="virus-remaining">
+                    <p>000</p>
+                </div>
+                <button id="new-game">  </button>
+                <div class="scoreboard" id="timer">
+                    <p>000</p>
+                </div>
             </div>
-            <button id="new-game">  </button>
-            <div class="scoreboard" id="timer">
-                <p>000</p>
-            </div>
-        </div>
-        <div id='board'>
+            <div id='board'>
 
+            </div>
         </div>
-    </div>
-    
+        <footer><p>2020</p></footer>
+    </div><!---container-->
     
 </body>
 </html>

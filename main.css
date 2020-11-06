@@ -3,41 +3,102 @@
     
 }
 
-body {
-    height: 100vh;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
+@media screen and (max-width: 660px) {
+    #header{
     justify-content: center;
-    align-items: center;
-    font-family: 'Open Sans', sans-serif;
+    text-align: center;
+    }
+
+    .container {
+        margin: 0 10px 0 10px;
+    }
 }
 
-#shell {
+body {
+    margin: 0;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: auto 1fr;   
+    font-family: karla, 'Open Sans', sans-serif;
+}
+
+.container {
+    margin-top: calc(20px + 5vh);
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: auto;
+    grid-template-areas: 
+        ". header ."
+        ". game ."
+        "footer footer footer";
+}
+
+header{
     display: flex;
-    flex-direction: column;
-    border: 2px solid magenta;
+    justify-content: space-between;
+    align-content: space-around;
+    grid-area: header;
+    flex-wrap: wrap;
+}
+
+
+
+header p{
+    /* justify-self: right; */
+    align-self: center;
+    
+}
+
+h1{
+    box-shadow: 1px 3px 3px 5px #3E4146;
+    padding:0 4px;
+}
+
+footer{
+    margin-top: calc(10px + 3vh);
+    display: flex;
+    grid-area: footer;
+    justify-content: center;
+    align-content: center;
+
+}
+
+
+
+#shell {
+    margin-top: calc(10px + .5vh);
+    grid-area: game;
+    border: 2px solid #242629;
+    border-radius: .25rem;
     padding: 1vh;
-    background-color: darksalmon;
-    box-shadow:         1px 3px 3px 5px black;
+    background-color: #bec9c8;
+    box-shadow:         1px 3px 3px 5px #3E4146;
+    
 }
 #stats {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    border: 3px solid green;
+    border: 3px solid #3E4146;
+    border-radius: .15rem;
     padding: 1vh;
+    margin-bottom: 1vh;
 }
 .scoreboard {
-    float: left;
-    border: 1px solid red;
-    color: red;
-    background-color: black;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5vh;
+    border: 2px solid #3E4146;
+    border-radius: .1rem;
+    color: rgb(233, 6, 6);
+    background-color: #242629;
     min-width: 100px;
     display: flex;
-    justify-content: center;
-    align-content: center;
+    justify-content: space-around;
+    align-content: space-around;
+    padding: .75rem;
 }
+
 button {
     min-width: 100px;
     font-size: 3vh;
@@ -45,31 +106,30 @@ button {
 }
 
 button:hover{
-    background-color: rgb(197, 191, 199);
+    background-color: #b9c2c2;;
 }
 
 #board {
-    border: .25vh solid grey;
+    justify-content: center;
     display: grid;
-    grid-template-columns: repeat(9, 10vmin);
-    grid-template-rows: repeat(9, 10vmin);
-    /* gap: 1vmin; */
+    grid-template-columns: repeat(9, calc(40px + 2vw));
+    grid-template-rows: repeat(9, calc(40px + 2vw));
+    margin: .5vh auto;
 }
 
 #board div {
-    /* border-radius: 50%; */
     border: 3px solid gray;
 }
 
 .square:hover {
-    background-color:#D6EAE9;
+    background-color:#bec9c8;
 }
 .square {
     font-size: 3vh;
     text-align: center;
     border-radius: 2px;
     color: #3E4146;
-    background-color: #CDD7E7;
+    background-color: #dbe6e5;
     
 
 }
@@ -83,7 +143,7 @@ button:hover{
 
 .revealed {
     border: 1px soid darkgray;
-    background-color: #8E95A0;
+    background-color: #b2b8b8;
 }
 
 .quarantined {

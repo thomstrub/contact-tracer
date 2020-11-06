@@ -58,7 +58,7 @@ let setting;
 let board;
 let virusLocations;
 let targetedTile;
-let nonVirusCellIds;
+let nonVirusTileIds;
 
 /*----- cached element references -----*/
 let gameBoardElem = document.getElementById('board')
@@ -81,11 +81,11 @@ function initialize(){
     gameState.firstClick = true;
     timer = 0;
     board = [];
-    nonVirusCellIds = [];
+    nonVirusTileIds = [];
     setting = difficulty.easy;
     virusCount = Math.round(rows * columns * setting);
     virusCountRender = virusCount;
-    board.length > 0 ? console.log(board.length) : createBoard();
+    createBoard();
     initializeBoard();
     
     
@@ -107,7 +107,6 @@ function initialize(){
 // id will be the i and j values separated by x and y to denote axis and to
 // keep from confusing coordinates with integers
 function createBoard(){
-    console.log('init is firing');
     for(let i = 0; i < rows; i++){
         // initialize an array for every row of tiles
         // each row is an array at board[i]
@@ -115,10 +114,7 @@ function createBoard(){
         for(let j = 0; j < columns; j++){
             // make a new tile as an instance of the class Tile 
             let newTile = new Tile();
-            // newTile.adjoiningTiles.push(defineAdjacentTiles(i, j));
-            // push each new tile into it's row's array
-            board[i].push(newTile);
-            // console.log(newTile);   
+            board[i].push(newTile);  
         }
     }
     return board;
@@ -140,7 +136,7 @@ function initializeBoard(){
             board[i][j].isQuarantined = false;
             board[i][j].quarantineClickCount = 0;
             if(board[i][j].isVirus === false){
-                nonVirusCellIds.push(board[i][j]);
+                nonVirusTileIds.push(board[i][j]);
             }
         }
     }
@@ -151,6 +147,7 @@ function generateId(x, y){
     return `x${x}y${y}`;
 }
 
+// compares an array of adjacent tiles with the tiles where virus are located
 function countAdjacentlVirus(adjacentArr, virusLocationArr) {
     let count = 0;
     adjacentArr.forEach(tile => {
@@ -203,19 +200,17 @@ function virusInit(){
 
 /*------------------------------ render and render helper functions ----------------------------*/
 
+// check for win or loss condition and render board tile states
 function render(){
-    console.log('render is rendering');
     renderBoard();
     board.forEach((row, idx) => {
         row.forEach((tile, jdx) => {
-            
             if(gameState.lose === true){
                 stopTimer();
                 renderLoss();
             }else if(gameState.win === true){
                 newGameButtonElem.innerText = "😎"
             }else {
-                console.log('regular game play');
                 newGameButtonElem.innerText = "😷"
             }
             renderTile(tile, idx, jdx);
@@ -226,8 +221,6 @@ function render(){
 }
 
 // create tile elements and cache them in the tileElements variable
-    // adjust the css so that the colums in the CSS will always be the number of columns
-// on the game board
 function renderBoard(){
     if(tileElements.length > 0){
         return;
@@ -244,12 +237,11 @@ function renderBoard(){
     }
 }
 
+// render board tile states
 function renderTile(tile, idx, jdx){
     if(tile.isRevealed === true){
-        console.log(`${tile.id} is revealed`)
         tileElements[idx][jdx].setAttribute('class', 'square revealed');
         if(tile.isVirus === true){
-            console.log(`${tile.id} is a virus`);
             tileElements[idx][jdx].textContent = '🦠';
         } else {
             if(tile.adjoiningVirus < 1){
@@ -268,20 +260,19 @@ function renderTile(tile, idx, jdx){
     }
 }
 
+// render loss message - virus locations, sick emoji
 function renderLoss(){
     newGameButtonElem.innerText = "🤒"
     virusLocations.forEach(function(location){
         let virusTile = board[Number(location.charAt(1))][Number(location.charAt(3))];
         virusTile.isRevealed = true;
     });
-    console.log('loss rendered');
 }
 
 
 /*---------------------------event listener / controller functions--------------------------------*/ 
 
 function tileClick(e){
-    console.log(e.target.id);
     targetedTile = board[Number(e.target.id.charAt(1))][Number(e.target.id.charAt(3))];
     if(gameState.win === false && gameState.lose === false){
         if(targetedTile.isRevealed === false && targetedTile.isQuarantined === false){
@@ -289,9 +280,8 @@ function tileClick(e){
                 gameState.lose = true;
                 stopTimer();
             } else {
-                console.log(targetedTile);
                 recursiveReveal(targetedTile);
-                let winCondition = nonVirusCellIds.every(winConditionLogic);
+                let winCondition = nonVirusTileIds.every(winConditionLogic);
                 if(winCondition === true){
                     gameState.win = true;
                     stopTimer();
@@ -310,7 +300,6 @@ function tileClick(e){
 
 function quarantineClick(e){
     e.preventDefault();
-    console.log(board[Number(e.target.id.charAt(1))][Number(e.target.id.charAt(3))]);
     targetedTile = board[Number(e.target.id.charAt(1))][Number(e.target.id.charAt(3))];
     targetedTile.toggleQuarantined();
     adjustVirusCountRender(targetedTile);
@@ -331,42 +320,21 @@ function adjustVirusCountRender(tile){
 }
 }
 
-function recursiveReveal(clickedTile){ // use while loop
-    console.log('recursive', clickedTile.adjoiningVirus);
+// function is not recursive yet, but reveals a tile or a large square of tiles
+function recursiveReveal(clickedTile){ 
     clickedTile.toggleRevealed();
     if(clickedTile.adjoiningVirus > 0){
         return;
     } else{
         for(let i = 0; i < clickedTile.adjoiningTiles.length; i++){
-            console.log('recursive firing');
             let adjacentTile = board[Number(clickedTile.adjoiningTiles[i].charAt(1))][Number(clickedTile.adjoiningTiles[i].charAt(3))];
             adjacentTile.toggleRevealed();
-            // recursiveReveal(adjacentTile);
-            // for(let j = 0; j < adjacentTile.adjoiningTiles.length; j++){
-            //     console.log('recursiverecursive is firing');
-            //     let adjacentAdjacentTile = board[Number(adjacentTile.adjoiningTiles[j].charAt(1))][Number(adjacentTile.adjoiningTiles[j].charAt(3))];
-            //     adjacentAdjacentTile.toggleRevealed;
-            // }
         }
-        
         return;
-    }
-    // }
-    // if(){
-    //     return;
-    // } else {
-    //     clickedTile.toggleRevealed();
-    //     console.log('virus log ', clickedTile.adjoiningVirus);
-    //     clickedTile.adjoiningTiles.forEach(function(tile){
-    //         let adjacentTile = board[Number(tile.charAt(1))][Number(tile.charAt(3))];
-    //                 adjacentTile.toggleRevealed();
-    //                 // recursiveReveal(adjacentTile);
-    //                 return;  
-    //     });
-       
+    }   
       
 }
-
+//used with function to determine if every non-virus tile has been revealed
 function winConditionLogic (tile){
     return (tile.isRevealed === true ? true : false);
 }

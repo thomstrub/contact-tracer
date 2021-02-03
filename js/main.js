@@ -32,7 +32,7 @@ class Tile {
         this.quarantineClickCount;
     }
     toggleRevealed() {
-        // recursive?
+        // recursive function with two base cases
         if(this.isRevealed === true){
             return;
         } else if(this.adjoiningVirus > 0){
@@ -42,7 +42,6 @@ class Tile {
             for(let i = 0; i < this.adjoiningTiles.length; i++){
                 this.isRevealed = true;
                 let adjacentTile = board[Number(this.adjoiningTiles[i].charAt(1))][Number(this.adjoiningTiles[i].charAt(3))];
-                console.log(adjacentTile, "adjacent tile")
                 adjacentTile.toggleRevealed();
             }
             return;

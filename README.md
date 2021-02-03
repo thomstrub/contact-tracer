@@ -3,7 +3,7 @@
 ## Intro
 A game of uncovering tiles, avoiding viruses, and quarantining suspected locations. Inspired by Minesweeper.
 
-The game is played much like Minesweeper with a few subtle thematic changes. The user is trying to avoid viruses, not bombs, and the classic 🙂  button has been replaced with a 😷  emoji, for example. The timer feature has been preserved for added stress, and for bragging rights when you finish a round quickly.
+The game is played much like Minesweeper with a few subtle thematic changes. When clicked, the tile reveals the number of adjacent virus or, if there are none, the tiles reveal recursively until adjacent virus are present. The timer feature has been preserved for added stress, and for bragging rights when you finish a round quickly.
 
 ## History
 [Minesweeper][1] was created by Robert Donner and Curtis Johnson in 1990 for Microsoft Windows. It was supposedly inspired by a game called [Cube][2] created by Jerimac Ratiff. Minesweeper came pre-loaded on Windows operating systems along with other favorites like [Ski-Free][3], Solitaire, and [Rodent's Revenge][4]. [Nostalgia][5].
@@ -39,7 +39,6 @@ If you are a mac user, you may have to use "control + click" for this feature.
 ## Next Steps (Ice Box 🥶)
 ---
 
-- Replace current click function with one that recursively uncovers tiles with no surrounding virus
 - Replace the current placement of virus (Math.random() based) with an algorithm that more evenly places the virus
 - Add a feature so that the first click is always a safe click
 - Add buttons for a medium and hard setting that increases the board and the number of virus

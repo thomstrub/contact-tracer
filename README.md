@@ -41,6 +41,7 @@ If you are a mac user, you may have to use "control + click" for this feature.
 
 - Replace current click function with one that recursively uncovers tiles with no surrounding virus
 - Replace the current placement of virus (Math.random() based) with an algorithm that more evenly places the virus
+- Add a feature so that the first click is always a safe click
 - Add buttons for a medium and hard setting that increases the board and the number of virus
 - Add a feature that displays mistakes made in quarantining (flagging) on the loss screen
 - Consider a feature that would allow the user to share their fastest time on social media

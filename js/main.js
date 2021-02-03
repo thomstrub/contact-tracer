@@ -32,7 +32,20 @@ class Tile {
         this.quarantineClickCount;
     }
     toggleRevealed() {
-        this.isRevealed = true;
+        // recursive function with two base cases
+        if(this.isRevealed === true){
+            return;
+        } else if(this.adjoiningVirus > 0){
+            this.isRevealed = true;
+            return;
+        } else {
+            for(let i = 0; i < this.adjoiningTiles.length; i++){
+                this.isRevealed = true;
+                let adjacentTile = board[Number(this.adjoiningTiles[i].charAt(1))][Number(this.adjoiningTiles[i].charAt(3))];
+                adjacentTile.toggleRevealed();
+            }
+            return;
+        }   
     }
     toggleQuarantined() {
         this.quarantineClickCount++;
@@ -200,7 +213,7 @@ function virusInit(){
 
 /*------------------------------ render and render helper functions ----------------------------*/
 
-// check for win or loss condition and render board tile states
+// check for win or loss condition and render those results then render the board
 function render(){
     renderBoard();
     board.forEach((row, idx) => {
@@ -281,7 +294,7 @@ function tileClick(e){
                 stopTimer();
             } else {
                 recursiveReveal(targetedTile);
-                let winCondition = nonVirusTileIds.every(winConditionLogic);
+                let winCondition = nonVirusTileIds.every(winConditionLogic);//*******************************************
                 if(winCondition === true){
                     gameState.win = true;
                     stopTimer();
@@ -323,15 +336,7 @@ function adjustVirusCountRender(tile){
 // function is not recursive yet, but reveals a tile or a large square of tiles
 function recursiveReveal(clickedTile){ 
     clickedTile.toggleRevealed();
-    if(clickedTile.adjoiningVirus > 0){
-        return;
-    } else{
-        for(let i = 0; i < clickedTile.adjoiningTiles.length; i++){
-            let adjacentTile = board[Number(clickedTile.adjoiningTiles[i].charAt(1))][Number(clickedTile.adjoiningTiles[i].charAt(3))];
-            adjacentTile.toggleRevealed();
-        }
-        return;
-    }   
+    
       
 }
 //used with function to determine if every non-virus tile has been revealed

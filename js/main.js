@@ -32,7 +32,21 @@ class Tile {
         this.quarantineClickCount;
     }
     toggleRevealed() {
-        this.isRevealed = true;
+        // recursive?
+        if(this.isRevealed === true){
+            return;
+        } else if(this.adjoiningVirus > 0){
+            this.isRevealed = true;
+            return;
+        } else {
+            for(let i = 0; i < this.adjoiningTiles.length; i++){
+                this.isRevealed = true;
+                let adjacentTile = board[Number(this.adjoiningTiles[i].charAt(1))][Number(this.adjoiningTiles[i].charAt(3))];
+                console.log(adjacentTile, "adjacent tile")
+                adjacentTile.toggleRevealed();
+            }
+            return;
+        }   
     }
     toggleQuarantined() {
         this.quarantineClickCount++;
@@ -323,15 +337,7 @@ function adjustVirusCountRender(tile){
 // function is not recursive yet, but reveals a tile or a large square of tiles
 function recursiveReveal(clickedTile){ 
     clickedTile.toggleRevealed();
-    if(clickedTile.adjoiningVirus > 0){
-        return;
-    } else{
-        for(let i = 0; i < clickedTile.adjoiningTiles.length; i++){
-            let adjacentTile = board[Number(clickedTile.adjoiningTiles[i].charAt(1))][Number(clickedTile.adjoiningTiles[i].charAt(3))];
-            adjacentTile.toggleRevealed();
-        }
-        return;
-    }   
+    
       
 }
 //used with function to determine if every non-virus tile has been revealed

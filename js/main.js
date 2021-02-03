@@ -200,7 +200,7 @@ function virusInit(){
 
 /*------------------------------ render and render helper functions ----------------------------*/
 
-// check for win or loss condition and render board tile states
+// check for win or loss condition and render those results then render the board
 function render(){
     renderBoard();
     board.forEach((row, idx) => {
@@ -281,7 +281,7 @@ function tileClick(e){
                 stopTimer();
             } else {
                 recursiveReveal(targetedTile);
-                let winCondition = nonVirusTileIds.every(winConditionLogic);
+                let winCondition = nonVirusTileIds.every(winConditionLogic);//*******************************************
                 if(winCondition === true){
                     gameState.win = true;
                     stopTimer();
